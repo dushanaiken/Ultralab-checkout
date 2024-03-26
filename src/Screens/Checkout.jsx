@@ -135,7 +135,7 @@ export const Checkout = () => {
             spinner
             text='Loading your content...'
         >
-            <div className="hht flex gap-1 flex-col-reverse lg:flex-row mx-4">
+            <div className="flex gap-1 flex-col-reverse lg:flex-row mx-4">
                 <Card
                     className="w-full lg:w-1/2 drop-shadow-xl rounded-lg p-4 flex  lg:flex-col  lg:h-dvh justify-between">
                     <div>
