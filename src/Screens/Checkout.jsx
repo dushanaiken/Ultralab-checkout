@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Button, Card, Input, Typography} from "@material-tailwind/react";
 import PatientServiceCenter from "../components/PatientServiceCenter";
 import {
-    useCreateOrderAndRetrieveTokenMutation,
+    useCreateOrderAndRetrieveTokenMutation, useLazyGetPatientAgreementQuery,
     useLazyGetPCSByZipAndRadiusQuery,
     useLazyGetTestListQuery,
     useMerchantLoginMutation
@@ -11,8 +11,9 @@ import {useAlert} from "react-alert";
 import {useLocation} from "react-router-dom";
 import LoadingOverlay from 'react-loading-overlay';
 import {PatientDetailsPopup} from "../components/PatientDetailsPopup";
-import {TextField} from "@mui/material";
+import {TextField, Tooltip} from "@mui/material";
 import {useGetUserIPQuery} from "../redux/services/GeoLocation";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 
 export const Checkout = () => {
@@ -24,15 +25,17 @@ export const Checkout = () => {
     }] = useCreateOrderAndRetrieveTokenMutation();
     const [getPCSData, {data: pcsData, isLoading: isPCSLoading}] = useLazyGetPCSByZipAndRadiusQuery();
     const [getTestDetails, {data: testData, isLoading: isTestsLoading}] = useLazyGetTestListQuery();
+    const [getAgreement, {data: patientAgreement}] = useLazyGetPatientAgreementQuery();
     const {data: userIPDetails} = useGetUserIPQuery();
     const alert = useAlert();
     const location = useLocation();
 
-    console.log('userIPDetails', userIPDetails)
     const paymentGatewayForm = useRef(null);
 
     const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [isAgreementAccepted, setIsAgreementAccepted] = useState(false);
     const [total, setTotal] = useState(0);
+    const [drawFee, setDrawFee] = useState(0);
     const [zipCode, setZipCode] = useState('');
     const [radius, setRadius] = useState('');
     const [patientDetails, setPatientDetails] = useState({
@@ -45,7 +48,8 @@ export const Checkout = () => {
         city: "",
         state: "",
         email: "",
-        cell: ""
+        cell: "",
+        postalCode: ''
     });
 
 
@@ -78,6 +82,7 @@ export const Checkout = () => {
         localStorage.setItem('token', tokenData?.access_token);
         if (tokenData?.access_token && valuesArray) {
             getTestDetails(valuesArray);
+            getAgreement();
         }
     }, [tokenData]);
 
@@ -98,29 +103,27 @@ export const Checkout = () => {
     const onCreateOrder = () => {
 
         if (selectedIndex === -1) {
-            alert.show('Please select patent service center')
+            alert.show('Please select patient service center')
             return;
         }
 
-        let patientDetailsCopy = {...patientDetails}
-        patientDetailsCopy.postalCode = zipCode;
-        console.log('patientDetailsCopy', patientDetailsCopy)
-        console.log('valuesArray', valuesArray)
+
         const testItemsToBeSend = valuesArray.map(testId => {
             return {id: testId}
         })
-        console.log('testItems', testItemsToBeSend)
+
+
         createOrderAndRetrieveToken({
                 accountID: process.env.REACT_APP_ULTA_LAB_ACCOUNT_ID,
                 ipAddress: "184.103.145.44",
                 locationID: pcsData[selectedIndex]?.id,
-                patientAgreementSigned: true,
+                patientAgreementSigned: isAgreementAccepted,
                 visitDate: "04/04/2024",
-                patient: patientDetailsCopy,
+                patient: patientDetails,
                 items: testItemsToBeSend,
                 tokenRequest: {
                     cancelUrl: "https://test.com/packages",
-                    finishUrl: "https://test.com/checkout-success",
+                    finishUrl: "https://hellohealthnutrition.myshopify.com",
                     formBackgroundColor: "#8E44AD",
                     merchantName: "Hello Health Nutrition LLC dba Hello Health"
                 }
@@ -221,20 +224,32 @@ export const Checkout = () => {
                             <Typography variant="h6" className="w-1/2 text-right">$ {total}</Typography>
                         </div>
                         <div className="flex mt-7">
-                            <Typography variant="h6" className="w-1/2">Other chargers</Typography>
-                            <Typography variant="h6" className="w-1/2 text-right">$ 0</Typography>
-                        </div>
-                        <div className="flex mt-7">
                             <Typography variant="h6" className="w-1/2">Discount</Typography>
                             <Typography variant="h6" className="w-1/2 text-right">$ 0</Typography>
+                        </div>
+                        <div className="flex mt-7 justify-between">
+                            <div className="flex">
+                                <Typography variant="h6" className="w-full">Draw fee</Typography>
+                                <Tooltip title={`Please Note:
+                                    *The Draw Fee is a pre-paid fee charged once for each
+                                    visit to the Patient Service Center to cover the actual drawing of the patient's
+                                    blood and or collection of their specimen(s). There will be no charges to the
+                                    patient at the Patient Service Center.`}
+                                         className="ml-4">
+                                    <InfoOutlinedIcon/>
+                                </Tooltip>
+                            </div>
+                            <Typography variant="h6" className="w-1/2 text-right">$ {drawFee}</Typography>
                         </div>
                         <div className="flex mt-7">
                             <Typography variant="h5" className="w-1/2 font-extrabold">Total amount</Typography>
                             <Typography variant="h5"
-                                        className="w-1/2 text-right font-extrabold">$ {total}</Typography>
+                                        className="w-1/2 text-right font-extrabold">$ {total + drawFee}</Typography>
                         </div>
                         <PatientDetailsPopup onSubmit={onCreateOrder} patientDetails={patientDetails}
-                                             setPatientDetails={setPatientDetails}/>
+                                             setPatientDetails={setPatientDetails} patientAgreement={patientAgreement}
+                                             isAgreementAccepted={isAgreementAccepted}
+                                             setIsAgreementAccepted={setIsAgreementAccepted}/>
 
 
                     </div>
@@ -271,7 +286,10 @@ export const Checkout = () => {
                     {/*</div>*/}
                     <div className="mt-6 h-dvh overflow-y-scroll">
                         {pcsData?.map((PCSData, index) =>
-                            (<PatientServiceCenter key={index} onClick={() => setSelectedIndex(index)}
+                            (<PatientServiceCenter key={index} onClick={() => {
+                                setSelectedIndex(index);
+                                setDrawFee(PCSData?.price);
+                            }}
                                                    isSelected={index === selectedIndex} PCSData={PCSData}/>)
                         )}
                     </div>

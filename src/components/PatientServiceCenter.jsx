@@ -1,5 +1,8 @@
 import {Card, Typography} from "@material-tailwind/react";
 import parse from 'html-react-parser';
+import {Tooltip} from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import React from "react";
 
 export default function PatientServiceCenter({PCSData, isSelected, onClick}) {
 
@@ -8,9 +11,19 @@ export default function PatientServiceCenter({PCSData, isSelected, onClick}) {
             onClick={onClick}
             className={`mt-6 border-4  drop-shadow-s rounded-lg p-4  ${isSelected && "border-blue-600"}`}>
 
-            <div className="flex">
+            <div className="flex justify-between">
                 <Typography variant="h5" className="w-1/2 text-sky-400">{PCSData?.name}</Typography>
-                {/*<Typography variant="h5" className="w-1/2 text-right">{PCSData.name}</Typography>*/}
+                <div className="flex">
+                    <Typography variant="h6" className="w-full">Draw fee ${PCSData.price}</Typography>
+                    <Tooltip title={`Please Note:
+                                    *The Draw Fee is a pre-paid fee charged once for each
+                                    visit to the Patient Service Center to cover the actual drawing of the patient's
+                                    blood and or collection of their specimen(s). There will be no charges to the
+                                    patient at the Patient Service Center.`}
+                             className="ml-4">
+                        <InfoOutlinedIcon/>
+                    </Tooltip>
+                </div>
             </div>
             <Typography variant="paragraph"
                         className="mt-6">{PCSData?.address1}, {PCSData?.address2}, {PCSData?.city}</Typography>

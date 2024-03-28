@@ -36,6 +36,9 @@ export const ultaLabAPI = createApi({
                 body: formBody,
             }),
         }),
+        getPatientAgreement: builder.query({
+            query: () => "v1/documents/patient-agreement",
+        }),
     }),
 })
 
@@ -44,6 +47,7 @@ export const {
     useLazyGetPCSByZipAndRadiusQuery,
     useMerchantLoginMutation,
     useCreateOrderAndRetrieveTokenMutation,
-    useLazyGetTestListQuery
+    useLazyGetTestListQuery,
+    useLazyGetPatientAgreementQuery,
 } = ultaLabAPI
 
