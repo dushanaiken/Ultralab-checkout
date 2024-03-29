@@ -4,6 +4,7 @@ import {transitions, positions, Provider as AlertProvider} from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {OrderSuccess} from "./Screens/OrderSuccess";
 
 const options = {
     position: positions.TOP_RIGHT, timeout: 5000, offset: '30px',
@@ -15,6 +16,7 @@ export default function App() {
         <AlertProvider template={AlertTemplate} {...options}>
             <Routes>
                 <Route path="/checkout" element={<Checkout/>}/>
+                <Route path="/success" element={<OrderSuccess/>}/>
             </Routes>
         </AlertProvider></LocalizationProvider>)
 }
