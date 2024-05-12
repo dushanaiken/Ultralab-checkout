@@ -9,10 +9,10 @@ export default function PatientServiceCenter({PCSData, isSelected, onClick}) {
     return (
         <Card
             onClick={onClick}
-            className={`mt-6 border-4  drop-shadow-s rounded-lg p-4  ${isSelected && "border-blue-600"}`}>
+            className={`mt-6 border-2  drop-shadow-s rounded-lg p-4 box-size ${isSelected && "border-range-600"}`}>
 
-            <div className="flex justify-between">
-                <Typography variant="h5" className="w-1/2 text-sky-400">{PCSData?.name}</Typography>
+            <div className="flex justify-between ">
+                <Typography variant="h5" className="w-1/2 text-range-400">{PCSData?.name}</Typography>
                 <div className="flex">
                     <Typography variant="h6" className="w-full">Draw fee ${PCSData.price}</Typography>
                     <Tooltip title={`Please Note:
