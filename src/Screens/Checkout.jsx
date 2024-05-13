@@ -41,7 +41,7 @@ export const Checkout = () => {
     useMerchantLoginMutation();
   const [
     createOrderAndRetrieveToken,
-    { data: orderData, isLoading: isOrderCreating },
+    { data: orderData, isLoading: isOrderCreating, error: orderError },
   ] = useCreateOrderAndRetrieveTokenMutation();
   const [getPCSData, { data: pcsData, isLoading: isPCSLoading }] =
     useLazyGetPCSByZipAndRadiusQuery();
@@ -132,13 +132,19 @@ export const Checkout = () => {
     );
   }, [testData]);
 
-  useEffect(() => {    
+  useEffect(() => { 
+    console.log(`orderData >>>>>>`, orderData)       
     if (orderData?.formToken) {
       if (paymentGatewayForm.current) {
         paymentGatewayForm.current.submit();
       }
     }
   }, [orderData]);
+
+  useEffect(() => {
+        console.log(`orderError >>>>>>`)
+        console.log(orderError)
+  }, [orderError])
 
   const validateEmail = (email) => {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -169,17 +175,18 @@ export const Checkout = () => {
       ...patientDetails,
       cell : patientDetails.cell.replace(/\D/g, '')
     }
-    createOrderAndRetrieveToken({
+
+createOrderAndRetrieveToken({
       accountID: process.env.REACT_APP_ULTA_LAB_ACCOUNT_ID,
-      ipAddress: "184.103.145.44",  // TODO : Should be Dynamic 
+      ipAddress: "184.103.145.44" , // TODO -> userIPDetails?.IPv4,
       locationID: pcsData[selectedIndex]?.id,
       patientAgreementSigned: isAgreementAccepted,
-      visitDate: "04/04/2024", // TODO : Should discussed 
+      visitDate: "06/06/2024", // TODO : Should discussed 
       patient: patientDetailsWithFormat,
       items: testItemsToBeSend,
       tokenRequest: {
-        cancelUrl: process.env.PAYMENT_CANCEL_URL,
-        finishUrl: process.env.PAYMENT_FINISH_URL,
+        cancelUrl: process.env.REACT_APP_PAYMENT_CANCEL_URL,
+        finishUrl: process.env.REACT_APP_PAYMENT_FINISH_URL,
         formBackgroundColor: "#8E44AD",
         merchantName: "Hello Health Nutrition LLC dba Hello Health",
       },
@@ -230,7 +237,7 @@ export const Checkout = () => {
       <form 
         ref={paymentGatewayForm} 
         method="post" 
-        action={process.env.PAYMENT_AUTHORIZE_NET_PAYMENT_URL}
+        action={process.env.REACT_APP_PAYMENT_AUTHORIZE_NET_PAYMENT_URL}
         id="formAuthorizeNetTestPage"
         name="formAuthorizeNetTestPage">
         <input type="hidden" name="token" value={orderData?.formToken}/>
