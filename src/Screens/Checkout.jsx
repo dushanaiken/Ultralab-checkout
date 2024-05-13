@@ -99,8 +99,6 @@ export const Checkout = () => {
     ? valuesParam.split(",").map((value) => decodeURIComponent(value))
     : [];
 
-  console.log(process.env.REACT_APP_PAYMENT_CANCEL_URL)
-
   useEffect(() => {
     const credentials = {
       grant_type: process.env.REACT_APP_ULTA_LAB_GRANT_TYPE,
