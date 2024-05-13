@@ -99,6 +99,8 @@ export const Checkout = () => {
     ? valuesParam.split(",").map((value) => decodeURIComponent(value))
     : [];
 
+  console.log(process.env.REACT_APP_PAYMENT_CANCEL_URL)
+
   useEffect(() => {
     const credentials = {
       grant_type: process.env.REACT_APP_ULTA_LAB_GRANT_TYPE,
@@ -171,20 +173,20 @@ export const Checkout = () => {
     }
 
     console.log(userIPDetails)
-    console.log(process.env.PAYMENT_CANCEL_URL)
-    console.log(process.env.PAYMENT_FINISH_URL)
-    console.log(process.env.PAYMENT_AUTHORIZE_NET_PAYMENT_URL)
+    console.log(process.env.REACT_APP_PAYMENT_CANCEL_URL)
+    console.log(process.env.REACT_APP_PAYMENT_FINISH_URL)
+    console.log(process.env.REACT_APP_PAYMENT_AUTHORIZE_NET_PAYMENT_URL)
     createOrderAndRetrieveToken({
       accountID: process.env.REACT_APP_ULTA_LAB_ACCOUNT_ID,
-      ipAddress: userIPDetails?.IPv4,
+      ipAddress: "184.103.145.44" , // TODO -> userIPDetails?.IPv4,
       locationID: pcsData[selectedIndex]?.id,
       patientAgreementSigned: isAgreementAccepted,
       visitDate: "06/06/2024", // TODO : Should discussed 
       patient: patientDetailsWithFormat,
       items: testItemsToBeSend,
       tokenRequest: {
-        cancelUrl: process.env.PAYMENT_CANCEL_URL,
-        finishUrl: process.env.PAYMENT_FINISH_URL,
+        cancelUrl: process.env.REACT_APP_PAYMENT_CANCEL_URL,
+        finishUrl: process.env.REACT_APP_PAYMENT_FINISH_URL,
         formBackgroundColor: "#8E44AD",
         merchantName: "Hello Health Nutrition LLC dba Hello Health",
       },
@@ -235,7 +237,7 @@ export const Checkout = () => {
       <form 
         ref={paymentGatewayForm} 
         method="post" 
-        action={process.env.PAYMENT_AUTHORIZE_NET_PAYMENT_URL}
+        action={process.env.REACT_APP_PAYMENT_AUTHORIZE_NET_PAYMENT_URL}
         id="formAuthorizeNetTestPage"
         name="formAuthorizeNetTestPage">
         <input type="hidden" name="token" value={orderData?.formToken}/>
