@@ -169,12 +169,17 @@ export const Checkout = () => {
       ...patientDetails,
       cell : patientDetails.cell.replace(/\D/g, '')
     }
+
+    console.log(userIPDetails)
+    console.log(process.env.PAYMENT_CANCEL_URL)
+    console.log(process.env.PAYMENT_FINISH_URL)
+    console.log(process.env.PAYMENT_AUTHORIZE_NET_PAYMENT_URL)
     createOrderAndRetrieveToken({
       accountID: process.env.REACT_APP_ULTA_LAB_ACCOUNT_ID,
-      ipAddress: "184.103.145.44",  // TODO : Should be Dynamic 
+      ipAddress: userIPDetails?.IPv4,
       locationID: pcsData[selectedIndex]?.id,
       patientAgreementSigned: isAgreementAccepted,
-      visitDate: "04/04/2024", // TODO : Should discussed 
+      visitDate: "06/06/2024", // TODO : Should discussed 
       patient: patientDetailsWithFormat,
       items: testItemsToBeSend,
       tokenRequest: {
