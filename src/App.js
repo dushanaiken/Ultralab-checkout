@@ -1,21 +1,25 @@
-import {Route, Routes} from "react-router-dom";
-import {transitions, positions, Provider as AlertProvider} from 'react-alert'
-import AlertTemplate from 'react-alert-template-basic'
-import {LocalizationProvider} from "@mui/x-date-pickers";
-import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
-import {Checkout} from "./Screens/Checkout";
+import logo from './logo.svg';
+import './App.css';
 
-const options = {
-    position: positions.TOP_RIGHT, timeout: 5000, offset: '30px',
-    transition: transitions.SCALE,
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
 }
 
-export default function App() {
-    return (<LocalizationProvider dateAdapter={AdapterMoment}>
-        <AlertProvider template={AlertTemplate} {...options} >
-            <Routes>
-                <Route path="/checkout" element={<Checkout/>}/>        
-                <Route path="*" element={<>Not Found</>} />        
-            </Routes>
-        </AlertProvider></LocalizationProvider>)
-}
+export default App;
