@@ -26,24 +26,26 @@ const FindALab = ({
           </h2>
           <div className="flex gap-4 mt-4  flex-col lg:flex-row">
             <TextField
-              label="Zip code"
-              type="number"
+              label="Zip code"              
               variant="outlined"
               value={zipCode}
               onChange={({ target: { value } }) => {
-                setZipCode(value);
-              }}
+                if (/^\d*$/.test(value)) {
+                  setZipCode(value);
+                }
+              }}              
               className="flex-initial lg:w-2/5 w-full"
             />
 
-            <TextField
-              type="number"
+            <TextField            
               label="Radius"
               variant="outlined"
               value={radius}
               onChange={({ target: { value } }) => {
-                setRadius(value);
-              }}
+                if (/^\d*$/.test(value)) {
+                  setRadius(value);
+                }
+              }}              
               className="flex-initial lg:w-2/5 w-full"
             />
 
