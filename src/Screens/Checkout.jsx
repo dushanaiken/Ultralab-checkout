@@ -23,7 +23,7 @@ export const Checkout = () => {
 
   const checkoutStatusList = [
     { "step": "01", "text": "Find a Lab", Component: FindALab },
-    { "step": "02", "text": "Third - Party", Component: ThirdParty },
+    { "step": "02", "text": "UltaLabs Terms", Component: ThirdParty },
     { "step": "03", "text": "Patient Details", Component: PatientDetails },
     { "step": "04", "text": "Order & Payment" },    
   ]  
@@ -150,7 +150,7 @@ export const Checkout = () => {
     console.log(`pcsDataError >>>>>>`)
     console.log(pcsDataError)   
   }, pcsDataError )
-  
+
   const validateEmail = (email) => {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(email);
