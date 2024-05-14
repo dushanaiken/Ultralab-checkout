@@ -31,7 +31,12 @@ const FindALab = ({
               value={zipCode}
               onChange={({ target: { value } }) => {
                 if (/^\d*$/.test(value)) {
-                  setZipCode(value);
+                  const numValue = Number(value);                  
+                  if (numValue > 0) {
+                    setZipCode(value);
+                  } else if (value === '') {
+                    setZipCode(value);
+                  } 
                 }
               }}              
               className="flex-initial lg:w-2/5 w-full"
@@ -43,7 +48,12 @@ const FindALab = ({
               value={radius}
               onChange={({ target: { value } }) => {
                 if (/^\d*$/.test(value)) {
-                  setRadius(value);
+                  const numValue = Number(value);                  
+                  if (numValue >= 1 && numValue <= 100) {
+                    setRadius(value);
+                  } else if (value === '') {
+                    setRadius(value);
+                  }          
                 }
               }}              
               className="flex-initial lg:w-2/5 w-full"

@@ -43,7 +43,7 @@ export const Checkout = () => {
     createOrderAndRetrieveToken,
     { data: orderData, isLoading: isOrderCreating, error: orderError },
   ] = useCreateOrderAndRetrieveTokenMutation();
-  const [getPCSData, { data: pcsData, isLoading: isPCSLoading }] =
+  const [getPCSData, { data: pcsData, isLoading: isPCSLoading, error: pcsDataError }] =
     useLazyGetPCSByZipAndRadiusQuery();
   const [getTestDetails, { data: testData, isLoading: isTestsLoading }] =
     useLazyGetTestListQuery();
@@ -146,6 +146,11 @@ export const Checkout = () => {
         console.log(orderError)
   }, [orderError])
 
+  useEffect(() => {
+    console.log(`pcsDataError >>>>>>`)
+    console.log(pcsDataError)   
+  }, pcsDataError )
+  
   const validateEmail = (email) => {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return regex.test(email);
@@ -217,7 +222,7 @@ createOrderAndRetrieveToken({
                 setZipCode={setZipCode}
                 radius={radius}                
                 setRadius={setRadius}
-                pcsData ={pcsData}
+                pcsData ={pcsDataError ? [] : pcsData}
                 getPCSData={getPCSData}
                 selectedIndex={selectedIndex}
                 setDrawFee={setDrawFee}
