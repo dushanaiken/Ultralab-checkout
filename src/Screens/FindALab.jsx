@@ -49,7 +49,7 @@ const FindALab = ({
               onChange={({ target: { value } }) => {
                 if (/^\d*$/.test(value)) {
                   const numValue = Number(value);                  
-                  if (numValue >= 1 && numValue <= 100) {
+                  if (numValue > 0) {
                     setRadius(value);
                   } else if (value === '') {
                     setRadius(value);
