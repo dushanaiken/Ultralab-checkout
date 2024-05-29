@@ -23,7 +23,7 @@ export const Checkout = () => {
 
   const checkoutStatusList = [
     { "step": "01", "text": "Find a Lab", Component: FindALab },
-    { "step": "02", "text": "Third - Party", Component: ThirdParty },
+    { "step": "02", "text": "UltaLabs Terms", Component: ThirdParty },
     { "step": "03", "text": "Patient Details", Component: PatientDetails },
     { "step": "04", "text": "Order & Payment" },    
   ]  
@@ -43,7 +43,7 @@ export const Checkout = () => {
     createOrderAndRetrieveToken,
     { data: orderData, isLoading: isOrderCreating, error: orderError },
   ] = useCreateOrderAndRetrieveTokenMutation();
-  const [getPCSData, { data: pcsData, isLoading: isPCSLoading }] =
+  const [getPCSData, { data: pcsData, isLoading: isPCSLoading, error: pcsDataError }] =
     useLazyGetPCSByZipAndRadiusQuery();
   const [getTestDetails, { data: testData, isLoading: isTestsLoading }] =
     useLazyGetTestListQuery();
@@ -144,7 +144,47 @@ export const Checkout = () => {
   useEffect(() => {
         console.log(`orderError >>>>>>`)
         console.log(orderError)
+        if(orderError){
+          const { status, data } = orderError;
+          if(status && status === 422){
+            const { errors } = data;
+            if(errors){
+              const obj = errors[0]
+              if(obj && obj?.field === 'PostalCode' && obj?.messages){            
+                alert.show(obj.messages, {type: 'error'})            
+              }
+            }
+          } else if(status && status === 500){
+            const { responseMessage } = data;
+            if(responseMessage){
+              alert.show(responseMessage, {type: 'error'})            
+            }
+          }
+        }
   }, [orderError])
+
+  useEffect(() => {
+    console.log(`pcsDataError >>>>>>`)
+    console.log(pcsDataError)   
+    if(pcsDataError){
+      const { status, data } = pcsDataError;
+      if(status && status === 404){
+          const { errors } = data;
+          if(errors){
+            const error = errors[0]
+            alert.show(error, {type: 'error'})            
+          }
+      } else if(status && status === 422){
+        const { errors } = data;
+        if(errors){
+          const obj = errors[0]
+          if(obj && obj?.field === 'distance' && obj?.messages){            
+            alert.show(obj.messages, {type: 'error'})            
+          }
+        }
+      }
+    }
+  }, pcsDataError )
 
   const validateEmail = (email) => {
     const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -154,18 +194,26 @@ export const Checkout = () => {
     const regex = /^\d{3}-\d{3}-\d{4}$/;
     return regex.test(number);
   }
+  const validateBirthday = (date) => {  
+    const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}$/;
+    return regex.test(date)
+  }
   const onCreateOrder = () => {
     if (selectedIndex === -1) {
       alert.show('Please select patient service center', {type: 'error',})
       return;
     }
-    const { email, cell } = patientDetails;
+    const { email, cell, dob } = patientDetails;
     if(!validateEmail(email)){
       alert.show(`Invalid Email Format`, {type: 'error',})
       return;
     }
     if(!validateUSPhoneNumber(cell)){
       alert.show(`Invalid Mobile Number`,{type: 'error',})
+      return;
+    }
+    if(!validateBirthday(dob)){
+      alert.show(`Invalid Birthday`, {type: 'error',})
       return;
     }
     const testItemsToBeSend = valuesArray.map((testId) => {
@@ -217,7 +265,7 @@ createOrderAndRetrieveToken({
                 setZipCode={setZipCode}
                 radius={radius}                
                 setRadius={setRadius}
-                pcsData ={pcsData}
+                pcsData ={pcsDataError ? [] : pcsData}
                 getPCSData={getPCSData}
                 selectedIndex={selectedIndex}
                 setDrawFee={setDrawFee}
