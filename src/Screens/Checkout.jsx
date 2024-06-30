@@ -133,7 +133,6 @@ export const Checkout = () => {
   }, [testData]);
 
   useEffect(() => { 
-    console.log(`orderData >>>>>>`, orderData)       
     if (orderData?.formToken) {
       if (paymentGatewayForm.current) {
         paymentGatewayForm.current.submit();
@@ -142,8 +141,6 @@ export const Checkout = () => {
   }, [orderData]);
 
   useEffect(() => {
-        console.log(`orderError >>>>>>`)
-        console.log(orderError)
         if(orderError){
           const { status, data } = orderError;
           if(status && status === 422){
@@ -164,8 +161,6 @@ export const Checkout = () => {
   }, [orderError])
 
   useEffect(() => {
-    console.log(`pcsDataError >>>>>>`)
-    console.log(pcsDataError)   
     if(pcsDataError){
       const { status, data } = pcsDataError;
       if(status && status === 404){
@@ -224,12 +219,16 @@ export const Checkout = () => {
       cell : patientDetails.cell.replace(/\D/g, '')
     }
 
+
+    const today = new Date();
+    const formattedToday = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+
 createOrderAndRetrieveToken({
       accountID: process.env.REACT_APP_ULTA_LAB_ACCOUNT_ID,
       ipAddress: "184.103.145.44" , // TODO -> userIPDetails?.IPv4,
       locationID: pcsData[selectedIndex]?.id,
       patientAgreementSigned: isAgreementAccepted,
-      visitDate: "06/06/2024", // TODO : Should discussed 
+      visitDate: formattedToday, // TODO : Should discussed 
       patient: patientDetailsWithFormat,
       items: testItemsToBeSend,
       tokenRequest: {
