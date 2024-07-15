@@ -76,24 +76,24 @@ const TestProductTable = ({
             </table>
             <div className="flex flex-col p-4">
               <div className="flex">
-                <Typography variant="h6" className="w-1/2">
+                <Typography variant="h6" className="w-1/2 text-sm">
                   Sub total
                 </Typography>
-                <Typography variant="h6" className="w-1/2 text-right">
+                <Typography variant="h6" className="w-1/2 text-right text-sm">
                   $ {total}
                 </Typography>
               </div>
               <div className="flex mt-7">
-                <Typography variant="h6" className="w-1/2">
+                <Typography variant="h6" className="w-1/2 text-sm">
                   Discount
                 </Typography>
-                <Typography variant="h6" className="w-1/2 text-right">
+                <Typography variant="h6" className="w-1/2 text-right text-sm">
                   $ 0
                 </Typography>
               </div>
               <div className="flex mt-7 justify-between">
                 <div className="flex">
-                  <Typography variant="h6" className="w-full">
+                  <Typography variant="h6" className="w-full text-sm">
                     Draw fee
                   </Typography>
                   <Tooltip
@@ -104,19 +104,19 @@ const TestProductTable = ({
                                     patient at the Patient Service Center.`}
                     className="ml-4"
                   >
-                    <InfoOutlinedIcon />
+                    <InfoOutlinedIcon sx={{ fontSize: 18 }}/>
                   </Tooltip>
                 </div>
-                <Typography variant="h6" className="w-1/2 text-right">
+                <Typography variant="h6" className="w-1/2 text-right text-sm">
                   $ {drawFee}
                 </Typography>
               </div>
               <div className="flex mt-7">
-                <Typography variant="h5" className="w-1/2 font-extrabold">
+                <Typography variant="h6" className="w-1/2 font-extrabold">
                   Total amount
                 </Typography>
                 <Typography
-                  variant="h5"
+                  variant="h6"
                   className="w-1/2 text-right font-extrabold"
                 >
                   $ {total + drawFee}
