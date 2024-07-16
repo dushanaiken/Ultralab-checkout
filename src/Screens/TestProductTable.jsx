@@ -11,6 +11,8 @@ const TestProductTable = ({
 
     const TABLE_HEAD = ["Third - Party Services", "Quantity", "Price"];
 
+    const formattedTotal = (total + drawFee).toFixed(2);
+
   return (
         <Card className="rounded-lg p-4 flex  lg:flex-col  lg:h-dvh justify-between total-amount">
           <div>
@@ -80,7 +82,7 @@ const TestProductTable = ({
                   Sub total
                 </Typography>
                 <Typography variant="h6" className="w-1/2 text-right text-sm">
-                  $ {total}
+                  $ {total.toFixed(2)}
                 </Typography>
               </div>
               <div className="flex mt-7">
@@ -119,7 +121,7 @@ const TestProductTable = ({
                   variant="h6"
                   className="w-1/2 text-right font-extrabold"
                 >
-                  $ {total + drawFee}
+                  $ {formattedTotal}
                 </Typography>
               </div>
             </div>
