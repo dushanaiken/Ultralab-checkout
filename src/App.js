@@ -8,6 +8,10 @@ import {Checkout} from "./Screens/Checkout";
 const options = {
     position: positions.TOP_RIGHT, timeout: 5000, offset: '30px',
     transition: transitions.SCALE,
+    containerStyle: {
+        zIndex: 9999,
+        fontSize:13
+    },
 }
 
 export default function App() {
