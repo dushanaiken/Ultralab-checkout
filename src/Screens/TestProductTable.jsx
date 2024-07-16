@@ -42,7 +42,7 @@ const TestProductTable = ({
 
                   return (
                     <tr key={name}>
-                      <td className={classes}>
+                      <td className={classes} style={{maxWidth: 250}}>
                         <Typography
                           variant="small"
                           color="blue-gray"
